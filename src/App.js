@@ -1,9 +1,10 @@
 import './App.css';
-import hotBg from "./assets/hot.jpg";
+import hotBg from "./assets/hot-pexel.jpg";
 import coldBg from "./assets/cold.jpg";
 import { Description } from "./Components/Description";
 import { useEffect, useState } from "react";
 import { getFormattedWeatherData } from "./weatherService.js";
+import { CiBookmark } from "react-icons/ci";
 
 function App() {
   const [city, setCity] = useState('delhi');
@@ -50,7 +51,11 @@ function App() {
           <div className="container">
             <div className="section section-input">
               <input onKeyDown={enterKeypressed} type="text" name="city" placeholder="Enter your city..." />
-              <button onClick={(e)=> handleUnitsClick(e)}>°F</button>
+              <div className='btn-box'>
+                <h2 className='fav'><CiBookmark  /></h2>
+              &nbsp;
+              &nbsp;
+              <button onClick={(e)=> handleUnitsClick(e)}>°F</button></div>
             </div>
             <div className="section secton-temperature">
               <div className="description">

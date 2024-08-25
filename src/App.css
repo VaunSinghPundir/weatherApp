@@ -91,3 +91,15 @@
 .temperature h1{
   font-size: 60px;
 }
+
+.btn-box{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.fav{
+  transition: .2s;
+}
+.fav:active{
+  scale: .9;
+}
