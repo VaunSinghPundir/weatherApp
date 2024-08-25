@@ -1,97 +1,144 @@
-import './App.css';
+import "./App.css";
 import hotBg from "./assets/hot-pexel.jpg";
 import coldBg from "./assets/cold.jpg";
 import { Description } from "./Components/Description";
 import { useEffect, useState } from "react";
 import { getFormattedWeatherData } from "./weatherService.js";
 import { CiBookmark } from "react-icons/ci";
-import { Favourite } from './Components/Favourite.jsx';
+import { Favourite } from "./Components/Favourite.jsx";
+import { IoBookmark } from "react-icons/io5";
+import { RxCross2 } from "react-icons/rx";
 
 function App() {
-  const [city, setCity] = useState('delhi');
+  const fav = JSON.parse(localStorage.getItem("favArray")) || [];
+  const lastCity = localStorage.getItem("lastCity");
+  const [city, setCity] = useState(lastCity || "delhi");
   const [weather, setWeather] = useState(null);
   const [units, setUnits] = useState("metric");
   const [bg, setBg] = useState(hotBg);
-  const fav = JSON.parse(localStorage.getItem('favArray')) || [];
-  const [favouriteWeather,setfavouriteWeather] = useState(fav);
+  const [favouriteWeather, setfavouriteWeather] = useState(fav);
+  const [isFavourite, setIsFavourite] = useState(false);
 
   useEffect(() => {
     const fetchWeatherData = async () => {
-      const data = await getFormattedWeatherData(city, units);
-      setWeather(data);
+        const data = await getFormattedWeatherData(city, units);
+        setWeather(data);
 
-      const threshold = units === 'metric' ? 18 : 64;
-      if(data.temp <= threshold){
+      const threshold = units === "metric" ? 18 : 64;
+      if (data?.temp <= threshold) {
         setBg(coldBg);
-      }
-      else {
+      } else {
         setBg(hotBg);
       }
     };
     fetchWeatherData();
   }, [units, city]);
 
-  const handleUnitsClick = (e) =>{
+  useEffect(() => {
+    if (weather) {
+      const checkIfFav = favouriteWeather.some(
+        (item) => item?.id === weather?.id
+      );
+      setIsFavourite(checkIfFav);
+    }
+  }, [weather, favouriteWeather]);
+
+  const handleUnitsClick = (e) => {
     const button = e.currentTarget;
     const currentUnit = button.innerText.slice(1);
 
-    const isCelcius = currentUnit === 'C';
-    button.innerText = isCelcius ? '°F' : '°C';
+    const isCelcius = currentUnit === "C";
+    button.innerText = isCelcius ? "°F" : "°C";
 
-    setUnits(isCelcius ? 'metric' : 'imperial');
-  }
+    setUnits(isCelcius ? "metric" : "imperial");
+  };
 
-  const enterKeypressed = (e) =>{
-    if(e.key === "Enter"){
-      setCity(e.currentTarget.value);
+  const enterKeypressed = (e) => {
+    if (e.key === "Enter") {
+      setCity(e.currentTarget?.value);
+      localStorage.setItem("lastCity", e.currentTarget?.value);
+      e.currentTarget.value = ''
       e.currentTarget.blur();
     }
-  }
+  };
 
-  const addFav = (e) => {
-    let isAlreadyFavourite = false;
-    favouriteWeather.map((item)=>{
-       item.id === weather.id ? isAlreadyFavourite = true : isAlreadyFavourite = false;
-    }) 
-    console.log("iss",isAlreadyFavourite);
-    console.log(weather)
-    if (!isAlreadyFavourite) {
+  const addFav = () => {
+    if (!isFavourite && weather) {
       const weatherArray = [...favouriteWeather, weather];
       setfavouriteWeather(weatherArray);
-      // console.log("weat",weather);
-      // console.log("fav", favouriteWeather);
-      localStorage.setItem('favArray', JSON.stringify(weatherArray));
+      localStorage.setItem("favArray", JSON.stringify(weatherArray));
     } else {
       console.log("Weather is already in favorites");
     }
   };
-  // console.log(favouriteWeather)
+
+  const emptyFav = () => {
+    localStorage.removeItem("favArray");
+    setfavouriteWeather([]);
+  };
+  const removeFav = () => {
+    if (weather) {
+      const updatedFavourites = favouriteWeather.filter(
+        (item) => item.id !== weather.id
+      );
+      setfavouriteWeather(updatedFavourites);
+      localStorage.setItem("favArray", JSON.stringify(updatedFavourites));
+    }
+  };
+  const handleFavClick = (newCity) =>{
+
+    setCity(newCity)
+  }
   return (
     <div className="App" style={{ backgroundImage: `url(${bg})` }}>
       <div className="overlay">
         {weather && (
           <div className="container">
+            {favouriteWeather.length === 0 ? (
+              ""
+            ) : (
+              <div className="cross" title="empty favourite" onClick={emptyFav}>
+                <RxCross2 />
+              </div>
+            )}
+            <Favourite favouriteWeather={favouriteWeather} units={units} handleFavClick={handleFavClick} />
             <div className="section section-input">
-              <input onKeyDown={enterKeypressed} type="text" name="city" placeholder="Enter your city..." />
-              <div className='btn-box'>
-                <h2 className='fav' onClick={(e)=> addFav(e)}><CiBookmark  /></h2>
-              &nbsp;
-              &nbsp;
-              <button onClick={(e)=> handleUnitsClick(e)}>°F</button></div>
+              <input
+                onKeyDown={enterKeypressed}
+                type="text"
+                name="city"
+                placeholder="Enter your city..."
+              />
+              <div className="btn-box">
+                {!isFavourite ? (
+                  <h2 className="fav" onClick={addFav}>
+                    <CiBookmark />
+                  </h2>
+                ) : (
+                  <h2 className="fav" onClick={removeFav}>
+                    <IoBookmark />
+                  </h2>
+                )}
+                &nbsp; &nbsp;
+                <button onClick={handleUnitsClick}>°F</button>
+              </div>
             </div>
             <div className="section secton-temperature">
+           
               <div className="description">
+
                 <h3>{`${weather.name}, ${weather.country}`}</h3>
                 <img src={weather.iconUrl} alt="weather-icon" />
                 <h3>{`${weather.description}`}</h3>
+                
               </div>
-
               <div className="temperature">
-                <h1>{`${weather.temp.toFixed()}°${units === "metric" ? 'C' : 'F'}`}</h1>
+                <h1>{`${weather.temp.toFixed()}°${
+                  units === "metric" ? "C" : "F"
+                }`}</h1>
               </div>
             </div>
-            <Description weather = {weather} units={units}/>
-            <Favourite favouriteWeather={favouriteWeather} />
+            <Description weather={weather} units={units} />
           </div>
         )}
       </div>
@@ -100,3 +147,4 @@ function App() {
 }
 
 export default App;
+
