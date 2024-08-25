@@ -5,12 +5,15 @@ import { Description } from "./Components/Description";
 import { useEffect, useState } from "react";
 import { getFormattedWeatherData } from "./weatherService.js";
 import { CiBookmark } from "react-icons/ci";
+import { Favourite } from './Components/Favourite.jsx';
 
 function App() {
   const [city, setCity] = useState('delhi');
   const [weather, setWeather] = useState(null);
   const [units, setUnits] = useState("metric");
   const [bg, setBg] = useState(hotBg);
+  const fav = JSON.parse(localStorage.getItem('favArray')) || [];
+  const [favouriteWeather,setfavouriteWeather] = useState(fav);
 
   useEffect(() => {
     const fetchWeatherData = async () => {
@@ -44,6 +47,25 @@ function App() {
       e.currentTarget.blur();
     }
   }
+
+  const addFav = (e) => {
+    let isAlreadyFavourite = false;
+    favouriteWeather.map((item)=>{
+       item.id === weather.id ? isAlreadyFavourite = true : isAlreadyFavourite = false;
+    }) 
+    console.log("iss",isAlreadyFavourite);
+    console.log(weather)
+    if (!isAlreadyFavourite) {
+      const weatherArray = [...favouriteWeather, weather];
+      setfavouriteWeather(weatherArray);
+      // console.log("weat",weather);
+      // console.log("fav", favouriteWeather);
+      localStorage.setItem('favArray', JSON.stringify(weatherArray));
+    } else {
+      console.log("Weather is already in favorites");
+    }
+  };
+  // console.log(favouriteWeather)
   return (
     <div className="App" style={{ backgroundImage: `url(${bg})` }}>
       <div className="overlay">
@@ -52,7 +74,7 @@ function App() {
             <div className="section section-input">
               <input onKeyDown={enterKeypressed} type="text" name="city" placeholder="Enter your city..." />
               <div className='btn-box'>
-                <h2 className='fav'><CiBookmark  /></h2>
+                <h2 className='fav' onClick={(e)=> addFav(e)}><CiBookmark  /></h2>
               &nbsp;
               &nbsp;
               <button onClick={(e)=> handleUnitsClick(e)}>°F</button></div>
@@ -69,6 +91,7 @@ function App() {
               </div>
             </div>
             <Description weather = {weather} units={units}/>
+            <Favourite favouriteWeather={favouriteWeather} />
           </div>
         )}
       </div>

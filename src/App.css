@@ -40,7 +40,7 @@
   color: white;
 }
 
-.section-input, .secton-temperature{
+.section-input, .secton-temperature, .section-fav{
   display: flex;
   align-items: center;
   justify-content: space-between;
