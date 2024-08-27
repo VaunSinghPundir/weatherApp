@@ -1,14 +1,17 @@
-const API_Key = "506d54cb792518efb56d76ec41bc5e87";
+const API_Key = "5796abbde9106b7da4febfae8c44c232";
+
+// const API_Key = "3b06ce2c942c279a4907a0d2eb7d398f"
 
 const makeIconUrl  = (iconId) => `https://openweathermap.org/img/wn/${iconId}@2x.png`;
 
 const getFormattedWeatherData = async (city, units = "metric") => {
   let data;
   try{
-  const URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_Key}&units=${units}`;
+  const URL = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_Key}&units=${units}`
+  // const URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_Key}&units=${units}`;
   const api = await fetch(URL);
   data = await api.json()
-  console.log(data)
+  // console.log(data)
 }catch(e){
   console.log("error",e)
 }
@@ -21,13 +24,11 @@ if(data.cod === 404){
     weather,
     main: { temp, feels_like, temp_min, temp_max, pressure, humidity },
     wind: { speed },
-    sys: { country },
-    name,
-  } = data;
+  } = data.list[0];
+  const {list } = data;
+  const {name, country}  = data.city;
 
   const { description, icon , id} = weather[0];
-
-//   console.log(data)
   return {
     id,
     description,
@@ -41,6 +42,7 @@ if(data.cod === 404){
     speed,
     country,
     name,
+    list
   };
 };
 

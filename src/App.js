@@ -8,6 +8,7 @@ import { CiBookmark } from "react-icons/ci";
 import { Favourite } from "./Components/Favourite.jsx";
 import { IoBookmark } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
+import { Forecast } from "./Components/Forecast.jsx";
 
 function App() {
   const fav = JSON.parse(localStorage.getItem("favArray")) || [];
@@ -18,12 +19,17 @@ function App() {
   const [bg, setBg] = useState(hotBg);
   const [favouriteWeather, setfavouriteWeather] = useState(fav);
   const [isFavourite, setIsFavourite] = useState(false);
+  const [forCast, setForcast] = useState([]);
+
+  useEffect(()=>{
+    // console.log("ffffffffffff",new Date().getDate())
+  })
 
   useEffect(() => {
     const fetchWeatherData = async () => {
         const data = await getFormattedWeatherData(city, units);
         setWeather(data);
-
+      // console.log("dddddddddddddd", data)
       const threshold = units === "metric" ? 18 : 64;
       if (data?.temp <= threshold) {
         setBg(coldBg);
@@ -138,7 +144,9 @@ function App() {
                 }`}</h1>
               </div>
             </div>
+
             <Description weather={weather} units={units} />
+            <Forecast  list={weather?.list} units={units} iconUrl={weather.iconUrl}/>
           </div>
         )}
       </div>

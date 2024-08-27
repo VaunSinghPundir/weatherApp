@@ -104,16 +104,17 @@
   scale: .9;
 }
 .section-fav{
-  overflow: auto;
+  overflow-x: scroll;
+  overflow-y: hidden;
   display: flex;
   align-items: center;
   justify-content: space-around;
   background-color: var(--secton-overlay);
 }
-.favbox{
+.favbox , .forecast{
   display: flex;
   justify-content: space-around;
-  height: 120px;
+  height: 100px;
   margin: 10px;
   border: 1px solid rgb(255, 241, 241);
   border-radius: 10px;
@@ -123,7 +124,7 @@
   }
 }
 
-.favbox h3{
+.favbox h3 , .forecast h3{
   font-size: 10px;
   text-align: center;
   width: 100px;
@@ -135,4 +136,8 @@ height: 80px;
 }
 .cross{
   font-size: 15px;
+}
+.forecast img{
+  width: 40px;
+  height: 40px;
 }

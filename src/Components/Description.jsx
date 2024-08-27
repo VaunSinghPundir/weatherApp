@@ -11,43 +11,43 @@ export const Description = ({ weather, units }) => {
     const windUnit = units === "metric" ? "m/s" : "m/h";
   
     const cards = [
+      // {
+      //   id: 1,
+      //   icon: <FaArrowDown />,
+      //   title: "min",
+      //   data: weather.temp_min.toFixed(),
+      //   unit: tempUnit,
+      // },
+      // {
+      //   id: 2,
+      //   icon: <FaArrowUp />,
+      //   title: "max",
+      //   data: weather.temp_max.toFixed(),
+      //   unit: tempUnit,
+      // },
       {
         id: 1,
-        icon: <FaArrowDown />,
-        title: "min",
-        data: weather.temp_min.toFixed(),
-        unit: tempUnit,
-      },
-      {
-        id: 2,
-        icon: <FaArrowUp />,
-        title: "max",
-        data: weather.temp_max.toFixed(),
-        unit: tempUnit,
-      },
-      {
-        id: 3,
         icon: <BiHappy />,
         title: "feels like",
         data: weather.feels_like.toFixed(),
         unit: tempUnit,
       },
+      // {
+      //   id: 4,
+      //   icon: <MdCompress />,
+      //   title: "pressure",
+      //   data: weather.pressure,
+      //   unit: "hPa",
+      // },
       {
-        id: 4,
-        icon: <MdCompress />,
-        title: "pressure",
-        data: weather.pressure,
-        unit: "hPa",
-      },
-      {
-        id: 5,
+        id: 2,
         icon: <MdOutlineWaterDrop />,
         title: "humidity",
         data: weather.humidity,
         unit: "%",
       },
       {
-        id: 6,
+        id: 3,
         icon: <FaWind />,
         title: "wind speed",
         data: weather.speed.toFixed(),
@@ -64,6 +64,7 @@ export const Description = ({ weather, units }) => {
               <small>{title}</small>
             </div>
             <h2>{`${data} ${unit}`}</h2>
+            
           </div>
         ))}
       </div>

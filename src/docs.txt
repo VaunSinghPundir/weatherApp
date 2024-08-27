@@ -1,3 +1,6 @@
 weather api for 5 days forcaste : api.openweathermap.org/data/2.5/forecast?q={city name}&appid={API key}
 
 api key = "3b06ce2c942c279a4907a0d2eb7d398f" ;
+
+
+api_key2 = 5796abbde9106b7da4febfae8c44c232
