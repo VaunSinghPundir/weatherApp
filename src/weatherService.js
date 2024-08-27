@@ -12,8 +12,10 @@ const getFormattedWeatherData = async (city, units = "metric") => {
 }catch(e){
   console.log("error",e)
 }
-if(data.cod == 404){
-  localStorage.removeItem("lastCity")
+if(data.cod === 404){
+  localStorage.removeItem("lastCity");
+  window.location.reload();
+
 }
   const {
     weather,
