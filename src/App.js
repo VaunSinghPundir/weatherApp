@@ -19,11 +19,8 @@ function App() {
   const [bg, setBg] = useState(hotBg);
   const [favouriteWeather, setfavouriteWeather] = useState(fav);
   const [isFavourite, setIsFavourite] = useState(false);
-  const [forCast, setForcast] = useState([]);
 
-  useEffect(()=>{
-    // console.log("ffffffffffff",new Date().getDate())
-  })
+
 
   useEffect(() => {
     const fetchWeatherData = async () => {
@@ -41,10 +38,12 @@ function App() {
   }, [units, city]);
 
   useEffect(() => {
+    console.log(",,,",weather);
     if (weather) {
       const checkIfFav = favouriteWeather.some(
-        (item) => item?.id === weather?.id
+        (item) => item?.name === weather?.name
       );
+      console.log(checkIfFav)
       setIsFavourite(checkIfFav);
     }
   }, [weather, favouriteWeather]);
@@ -92,7 +91,7 @@ function App() {
     }
   };
   const handleFavClick = (newCity) =>{
-
+    localStorage.setItem("lastCity", newCity);
     setCity(newCity)
   }
   return (
@@ -138,7 +137,7 @@ function App() {
                 <h3>{`${weather.description}`}</h3>
                 
               </div>
-              <div className="temperature">
+              <div className="temperature" title={`Min⬇️ - ${weather.temp_min} - Max⬆️ - ${weather.temp_max}`} >
                 <h1>{`${weather.temp.toFixed()}°${
                   units === "metric" ? "C" : "F"
                 }`}</h1>
